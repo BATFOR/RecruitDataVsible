@@ -2,9 +2,9 @@
 
 ## 项目展示 ##  
 
-![](https://img-blog.csdnimg.cn/20191014111336583.GIF)
-![](https://img-blog.csdnimg.cn/20191014111356948.GIF)
-![](https://img-blog.csdnimg.cn/20191014111412966.GIF)
+![](https://github.com/BATFOR/MyImg/blob/master/20191014111336583.gif)
+![](https://github.com/BATFOR/MyImg/blob/master/20191014111356948.gif?raw=true)
+![](https://github.com/BATFOR/MyImg/blob/master/20191014111412966.gif?raw=true)
 
 ## 部署文档 ##  
 
