@@ -1,0 +1,214 @@
+<!-- data_viewer.html -->
+{% extends 'base.html' %}
+
+{% block title %} 莞工言职 {% endblock %}
+
+{% block content %}
+
+    <div class="row clearfix">
+        <div class="col-md-12 column">
+            <div class="jumbotron">
+                <h1>IT言职</h1>
+                <p>获取IT市场需求, 了解热门技术趋势.</p>
+                <P>快速查看<a href="#trend">行业工资</a>,<a href="#top25">热门职位</a>, <a href="#trend">工资走向</a>
+                    <br>职位数量越多的职位, 平均薪资更具参考性.
+                    <br>
+                    <a href="#trend">工资走向</a>信息, 请在行业工资图中点击对应职位名称.<br>
+                    筛选指定城市数据, 请点击省份, 然后选择城市</P><br>
+            </div>
+
+            {#  Post average salary bar charts and trends - 岗位平均工资条形图及趋势图   #}
+            <div class='panel panel-default'>
+                <div class='panel-body'>
+                    <br>
+                    <div id="trend" style="width: 950px; height: 750px; margin: 0 auto"></div>
+
+                    <div id="top25" style="height: 750px; min-width: 310px; max-width: 800px; margin: 0 auto"></div>
+
+                    <div id="container3" style="height: 750px; min-width: 310px; max-width: 800px; margin: 0 auto"></div>
+
+                    <div class='panel-default' id="salary_table">
+                        {# Post average salary table - 岗位平均工资表 #}
+                        <table class="table table-bordered table-hover">
+                        <caption>{{city}}岗位平均工资排名表 Source: 51Job.com</caption>
+                        <thead>
+                            <tr>
+                            <th>职位</th>
+                            <th>平均工资</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            {% for kd, avg_salary in keyword_dict.items %}
+                            <tr>
+                            <td>{{ kd }}</td>
+                            <td>{{ avg_salary }}k</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="http://code.highcharts.com/highcharts.js"></script>
+    <script src="https://img.hcharts.cn/highcharts/modules/drilldown.js"></script>
+    <link href="http://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet">
+{% endblock %}
+
+{% block js %}
+
+<script type="text/javascript">
+  $(function (){
+    $('#trend').highcharts({
+      chart: {
+          type: 'column',
+          events:{
+              drillup: function(e) {
+              // 上钻回调事件
+              console.log(e.seriesOptions);
+            },
+              drilldown: function (e) {
+                  $.get('/get_trend_by_word/', {'keyword':String(e.point.name), 'city': '东莞'}, function(ret){
+                      console.log(ret.Animals)
+                      series = ret
+                      console.log(series)
+                  });
+                  if (!e.seriesOptions) {
+                      var chart = this,
+                          drilldowns = {type:'line',},
+                          series = drilldowns;
+                      // Show the loading label
+                      chart.showLoading('正在获取数据...');
+                      setTimeout(function () {
+                          chart.hideLoading();
+                          chart.addSeriesAsDrilldown(e.point, series);}, 1000);
+                  }
+              }
+          }
+          },
+        title: {text: '岗位平均工资'},
+        subtitle: {text: 'Source: 51job.com'},
+        xAxis: {type: 'category'},
+        yAxis: {min: 0, title: {text: '平均工资(k)'}},
+        tooltip:{headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+            pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+            '<td style="padding:0"><b>{point.y:.1f} k</b></td></tr>',
+            footerFormat: '</table>',
+            shared: true,
+            useHTML: true,
+            valueSuffix: '点击职位名称查看工资走向'},
+        plotOptions: {
+          column: {
+              pointPadding: 0.2,
+              borderWidth: 4
+          }},
+        scrollbar: {enabled: true},
+        credits: {enabled: false},
+        series: [{% for k, v in series.items %}{
+            name: '{{ k }}', data: [ {name: '{{ k }}', y: {{ v }}, drilldown: '{{ k }}' }],},
+        {% endfor %}],
+        drilldown: {type:'line', series: []
+      }
+    });
+  });
+</script>
+
+<script type="text/javascript">
+    $(function () {
+        $('#container3').highcharts({
+            chart: {
+                plotBackgroundColor: null,
+                plotBorderWidth: null,
+                plotShadow: false
+            },
+            title: {text: '各大地区职位数量占比'},
+            tooltip: {
+                headerFormat: '{series.name}<br>',
+                pointFormat: '{point.name}: <b>{point.percentage:.1f}%</b>'},
+            plotOptions: {
+                pie: {
+                    allowPointSelect: true,
+                    cursor: 'pointer',
+                    dataLabels: {
+                        enabled: true,
+                        format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+                        style: {
+                            color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'}
+                            },
+                    states: {
+                        hover: {enabled: false}},
+                    slicedOffset: 20,         // 突出间距
+                    point: {                  // 每个扇区是数据点对象，所以事件应该写在 point 下面
+                    events: {
+                        // 鼠标滑过是，突出当前扇区
+                        mouseOver: function() {
+                            this.slice();
+                        },
+                        // 鼠标移出时，收回突出显示
+                        mouseOut: function() {
+                            this.slice();
+                        },
+                        // 默认是点击突出，这里屏蔽掉
+                        click: function() {
+                            return false;
+                        }
+                    }
+                }
+            }
+        },
+        series: [{
+            type: 'pie',
+            name: '职位信息占比',
+            data: [
+                {% for item in cities %}
+                  {{item|safe}},
+                {% endfor %}
+            ]
+        }]
+    });
+});
+</script>
+
+<script language="JavaScript">
+    $(document).ready(function() {
+        var chart = {type: 'column'};
+        var title = {text: '热门职位数量排名'};
+        var subtitle = {text: 'Source: 51job.com'};
+        var xAxis = {type: 'category'};
+        var yAxis = {
+            min: 0,
+            title: {text: '职位数量(个)'}};
+        var tooltip = {
+            headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+            pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+            '<td style="padding:0"><b>{point.y:.1f} 个</b></td></tr>',
+            footerFormat: '</table>',
+            shared: true,
+            useHTML: true};
+        var plotOptions = {
+            column: {
+                pointPadding: 0.2,
+                borderWidth: 4
+            }};
+        var credits = {
+            enabled: false};
+        var series = [
+            {% for key_word, value in top_job_counts.items %}
+                {name: '{{ key_word }}', data: [ {name: '{{ key_word }}', y: {{ value }}}],},
+            {% endfor %}];
+        var json = {};
+        json.chart = chart;
+        json.title = title;
+        json.subtitle = subtitle;
+        json.tooltip = tooltip;
+        json.xAxis = xAxis;
+        json.yAxis = yAxis;
+        json.series = series;
+        json.plotOptions = plotOptions;
+        json.credits = credits;
+        $('#top25').highcharts(json);});
+</script>
+{% endblock %}

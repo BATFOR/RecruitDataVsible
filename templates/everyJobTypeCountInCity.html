@@ -1,0 +1,121 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html style="height: 100%">
+   <head>
+       <meta charset="utf-8">
+       <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+   </head>
+   <body style="height: 100%; margin: 0">
+       <div class="col-sm-12" style="height: 100%">
+           <div id="container" style="height: 100%"></div>
+           <div class="form-group" style="position: absolute;top: 0px;right: 50px;">
+           <label for="city" style="color: white;">热门职位排名</label>
+           <select id="city" class="form-control">
+               <option value="北京">北京</option>
+               <option value="深圳">深圳</option>
+               <option value="上海">上海</option>
+               <option value="广州">广州</option>
+               <option value="成都">成都</option>
+               <option value="杭州">杭州</option>
+               <option value="郑州">郑州</option>
+               <option value="南京">南京</option>
+               <option value="西安">西安</option>
+               <option value="上海">上海</option>
+               <option value="广州">广州</option>
+               <option value="武汉">武汉</option>
+               <option value="济南">济南</option>
+               <option value="天津">天津</option>
+
+               <option value="长沙">长沙</option>
+               <option value="苏州">苏州</option>
+               <option value="青岛">青岛</option>
+               <option value="福州">福州</option>
+               <option value="合肥">合肥</option>
+               <option value="石家庄">石家庄</option>
+               <option value="沈阳">沈阳</option>
+               <option value="厦门">厦门</option>
+               <option value="重庆">重庆</option>
+               <option value="大连">大连</option>
+               <option value="太原">太原</option>
+               <option value="佛山">佛山</option>
+               <option value="无锡">无锡</option>
+               <option value="宁波">宁波</option>
+
+               <option value="长春">长春</option>
+               <option value="东莞">东莞</option>
+               <option value="常州">常州</option>
+               <option value="哈尔滨">哈尔滨</option>
+               <option value="南昌">南昌</option>
+               <option value="贵阳">贵阳</option>
+               <option value="烟台">烟台</option>
+               <option value="昆明">昆明</option>
+               <option value="昆山">昆山</option>
+               <option value="珠海">珠海</option>
+           </select>
+       </div>
+       </div>
+
+       <script src="{% static 'js/jquery.min.js' %}"></script>
+       <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/echarts.min.js"></script>
+       <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts-gl/echarts-gl.min.js"></script>
+       <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts-stat/ecStat.min.js"></script>
+       <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/extension/dataTool.min.js"></script>
+       <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/map/js/china.js"></script>
+       <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/map/js/world.js"></script>
+       <script type="text/javascript" src="https://api.map.baidu.com/api?v=2.0&ak=kTWetyXuPLx38KRbCHxswZRkFKPLtw0H&__ec_v__=20190126"></script>
+       <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/extension/bmap.min.js"></script>
+       <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/simplex.js"></script>
+       <script type="text/javascript">
+var dom = document.getElementById("container");
+var myChart = echarts.init(dom);
+myChart.showLoading();
+option = {
+    xAxis: {
+        type: 'category',
+        data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+    },
+    yAxis: {
+        type: 'value',
+         name : '个',
+    },
+    series: [{
+        data: [820, 932, 901, 934, 1290, 1330, 2000],
+        type: 'line'
+    }],
+    title: {
+        left: 'center',
+        text: '地区热门职位Top10',
+    },
+};
+window.onresize = function(){
+    myChart.resize();
+}
+initDigram();
+function initDigram(){
+      $.ajax({
+            async : false,    //表示请求是否异步处理
+            type : "get",    //请求类型
+            url : "/job/jobTypeCountOfCity",//请求的 URL地址
+            dataType : "json",//返回的数据类型
+            data:{"city":$("#city").val()},
+            success: function (datas) {
+                myChart.hideLoading();
+                option.xAxis.data = datas.names;
+                option.series[0].data = datas.counts;
+            },
+            error:function (data) {
+
+            }
+        });
+    if (option && typeof option === "object") {
+        myChart.setOption(option, true);
+    }
+}
+
+$("#city").change(function(){
+   initDigram();
+});
+
+       </script>
+   </body>
+</html>

@@ -1,0 +1,194 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html style="height: 100%">
+   <head>
+       <meta charset="utf-8">
+   </head>
+   <body style="height: 100%; margin: 0">
+       <div id="container" style="height: 100%"></div>
+       <script src="{% static 'js/jquery.min.js' %}"></script>
+       <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/echarts.min.js"></script>
+       <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts-gl/echarts-gl.min.js"></script>
+       <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts-stat/ecStat.min.js"></script>
+       <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/extension/dataTool.min.js"></script>
+       <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/map/js/china.js"></script>
+       <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/map/js/world.js"></script>
+       <script type="text/javascript" src="https://api.map.baidu.com/api?v=2.0&ak=kTWetyXuPLx38KRbCHxswZRkFKPLtw0H&__ec_v__=20190126"></script>
+       <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/extension/bmap.min.js"></script>
+       <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/simplex.js"></script>
+       <script type="text/javascript">
+var dom = document.getElementById("container");
+var myChart = echarts.init(dom);
+var app = {};
+option = null;
+myChart.showLoading();
+jobTypeData = null
+cityData = null
+window.onresize = function(){
+    myChart.resize();
+}
+
+$.get('/job/avgWage', function (avgWage) {
+    myChart.hideLoading();
+    jobTypeData = avgWage;
+
+    option = {
+        tooltip : {
+            trigger: 'axis',
+            axisPointer: {
+                type: 'shadow',
+                label: {
+                    show: true
+                }
+            }
+        },
+        toolbox: {
+            show : true,
+            feature : {
+                mark : {show: true},
+                dataView : {show: true, readOnly: false},
+                magicType: {show: true, type: ['line', 'bar']},
+                restore : {show: true},
+                saveAsImage : {show: true}
+            }
+        },
+        calculable : true,
+        legend: {
+            data:[ '岗位平均工资', '城市平均工资'],
+            selected:{
+                '岗位平均工资':true,
+                '城市平均工资':false
+//                'Growth':false
+            },
+            itemGap: 5
+        },
+        grid: {
+            top: '12%',
+            left: '2%',
+            right: '10%',
+            containLabel: true
+        },
+        xAxis: [
+            {
+                type : 'category',
+                data : avgWage.names
+            }
+        ],
+        yAxis: [
+            {
+                type : 'value',
+                name : '平均工资(千)',
+                axisLabel: {
+                    formatter: function (a) {
+                        a = +a;
+                        return isFinite(a)
+                            ? echarts.format.addCommas(+a / 1)
+                            : '';
+                    }
+                }
+            }
+        ],
+        dataZoom: [
+            {
+                show: true,
+                start: 0,
+                end: 100
+            },
+            {
+                type: 'inside',
+                start: 94,
+                end: 100
+            },
+            {
+                show: true,
+                yAxisIndex: 0,
+                filterMode: 'empty',
+                width: 30,
+                height: '80%',
+                showDataShadow: false,
+                left: '93%'
+            }
+        ],
+        series : [
+            {
+                name: '岗位平均工资',
+                type: 'bar',
+                data: avgWage.AvgWage
+            },
+            {
+                name: '城市平均工资',
+                type: 'bar',
+                data: avgWage.AvgWage
+            }
+        ]
+    };
+
+    myChart.setOption(option);
+
+    myChart.on('legendselectchanged', function(obj) {
+        var selected = {};
+        var category = "岗位";
+        if(obj.name=="岗位平均工资"){
+            selected["岗位平均工资"] = true;
+            selected["城市平均工资"] = false;
+            category = "岗位";
+
+        }else if(obj.name=="城市平均工资"){
+            selected["岗位平均工资"] = false;
+            selected["城市平均工资"] = true;
+            category = "城市";
+        }
+
+        if(category == "岗位"){
+             if(jobTypeData!=null && typeof jobTypeData=="object"){
+                     option.series[0].data = jobTypeData.AvgWage;
+                     option.series[1].data = jobTypeData.AvgWage;
+                     option.xAxis[0].data = jobTypeData.names;
+                     option.legend.selected = selected;
+                     this.setOption(option)
+                     return;
+             }
+        }else if(category == "城市"){
+            if(cityData!=null && typeof  cityData == "object"){
+                     option.series[0].data = cityData.AvgWage;
+                     option.series[1].data = cityData.AvgWage;
+                     option.xAxis[0].data = cityData.names;
+                     option.legend.selected = selected;
+                     this.setOption(option)
+                     return;
+            }
+        }
+
+        $.ajax({
+                async : false,    //表示请求是否异步处理
+                type : "get",    //请求类型
+                url : "/job/avgWage",//请求的 URL地址
+                dataType : "json",//返回的数据类型
+                data:{"category":category},
+                success: function (datas){
+
+                     option.series[0].data = datas.AvgWage;
+                     option.series[1].data = datas.AvgWage;
+                     option.xAxis[0].data = datas.names;
+                     if(category == "城市"){
+                         cityData = datas;
+                     }
+                },
+                error:function (data) {
+
+                }
+            });
+
+    option.legend.selected = selected;
+    this.setOption(option)
+
+});
+
+
+});
+if (option && typeof option === "object") {
+    myChart.setOption(option, true);
+}
+       </script>
+   </body>
+</html>

@@ -1,0 +1,325 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+    <title>查询用户</title>
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+
+    <link rel="shortcut icon" href="{% static 'favicon.ico' %}"> <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+    <link href="{% static 'css/font-awesome.css' %}" rel="stylesheet">
+    <link href="{% static 'css/plugins/bootstrap-table/bootstrap-table.min.css' %}" rel="stylesheet">
+    <link href="{% static 'css/animate.css' %}" rel="stylesheet">
+    <link href="{% static 'css/style.css' %}" rel="stylesheet">
+
+
+</head>
+
+<body class="gray-bg">
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <!-- Panel Other -->
+        <div class="ibox float-e-margins">
+            <div class="ibox-title">
+                <h5>招聘信息</h5>
+                <div class="ibox-tools">
+                    <a class="collapse-link">
+                        <i class="fa fa-chevron-up"></i>
+                    </a>
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                        <i class="fa fa-wrench"></i>
+                    </a>
+                    <a class="close-link">
+                        <i class="fa fa-times"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="ibox-content">
+                <div class="row row-lg">
+                    <div class="col-sm-12">
+                        <!-- Example Events -->
+                        <div class="example-wrap">
+                            <div class="example">
+                                <div class="btn-group hidden-xs" id="exampleTableEventsToolbar" role="group">
+                                    <form role="form" class="form-inline">
+                                        <div class="form-group">
+                                            <label for="city" class="sr-only">工作城市</label>
+                                            <input type="text" placeholder="工作城市" id="city"
+                                                   class="form-control">
+                                        </div>
+                                        <div class="form-group form-group-sm">
+                                            <label for="job_experience" class="sr-only">工作经验</label>
+                                            <select id="job_experience" class="form-control">
+                                                <option value="">工作经验要求选择</option>
+                                                <option value="不限">不限</option>
+                                                <option value="无经验">无经验</option>
+                                                <option value="1年以下">1年以下</option>
+                                                <option value="1-3年">1-3年</option>
+                                                <option value="3-5年">3-5年</option>
+                                                <option value="5-10年">5-10年</option>
+                                                <option value="10年以上">10年以上</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group form-group-sm">
+                                            <label for="education" class="sr-only">学历要求</label>
+                                            <select type="text" id="education"
+                                                   class="form-control">
+                                                <option value="">学历要求选择</option>
+                                                <option value="学历不限">学历不限</option>
+                                                <option value="高中">高中</option>
+                                                <option value="中专">中专</option>
+                                                <option value="大专">大专</option>
+                                                <option value="本科">本科</option>
+                                                <option value="硕士">硕士</option>
+                                                <option value="博士">博士</option>
+                                                <option value="其他">其他</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group form-group-sm">
+                                            <label for="postType" class="sr-only">岗位类型</label>
+                                            <select type="text" id="postType" class="form-control">
+                                               <option value="">岗位类型选择</option>
+                                               <option value="Java开发">Java开发</option>
+                                               <option value="UI设计师">UI设计师</option>
+                                               <option value="Web前端">Web前端</option>
+                                               <option value="PHP">PHP</option>
+                                               <option value="Python">Python</option>
+                                               <option value="Android">Android</option>
+                                               <option value="美工">美工</option>
+                                               <option value="深度学习">深度学习</option>
+                                               <option value="算法工程师">算法工程师</option>
+                                               <option value="Hadoop">Hadoop</option>
+                                               <option value="Node.js">Node.js</option>
+                                               <option value="数据开发">数据开发</option>
+                                               <option value="数据分析师">数据分析师</option>
+                                               <option value="数据架构">数据架构</option>
+
+                                               <option value="人工智能">人工智能</option>
+                                               <option value="区块链">区块链</option>
+                                               <option value="电气工程师">电气工程师</option>
+                                               <option value="电子工程师">电子工程师</option>
+                                               <option value="PLC">PLC</option>
+                                               <option value="测试工程师">测试工程师</option>
+                                               <option value="设备工程师">设备工程师</option>
+                                               <option value="硬件工程师">硬件工程师</option>
+                                               <option value="结构工程师">结构工程师</option>
+                                               <option value="工艺工程师">工艺工程师</option>
+                                               <option value="产品经理">产品经理</option>
+                                               <option value="新媒体运营">新媒体运营</option>
+                                               <option value="运营专员">运营专员</option>
+                                               <option value="淘宝运营">淘宝运营</option>
+
+                                               <option value="天猫运营">天猫运营</option>
+                                               <option value="产品助理">产品助理</option>
+                                               <option value="产品运营">产品运营</option>
+                                               <option value="淘宝客服">淘宝客服</option>
+                                               <option value="游戏运营">游戏运营</option>
+                                               <option value="编辑">编辑</option>
+                                            </select>
+                                            <button class="btn btn-default" type="button" class="form-control" onclick="btn_query_click()">查询</button>
+                                        </div>
+                                    </form>
+                                </div>
+                                <table id="exampleTableEvents" data-height="450" data-mobile-responsive="true">
+                                </table>
+                            </div>
+                        </div>
+                        <!-- End Example Events -->
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- End Panel Other -->
+    </div>
+    <div class="modal inmodal" id="myModal2" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content animated flipInY">
+                    <div class="modal-header">
+                        <h4 class="modal-title">公司信息</h4>
+                    </div>
+                    <div class="modal-body row" style="margin: 0;position: relative;">
+                        <div class="col-md-5">
+                            <img id="companyImg" src="http://img09.zhaopin.com/2012/other/mobile/mi/companyLogo/03/default.png" width="200" height="200" style="margin: 0 auto;">
+                        </div>
+                        <div class="col-md-7">
+                             <a id="companyName" style="font-size: 24px;margin-top:20px;display: block;" href="javascript:">成都众慧贸易有限公司</a><br>
+                             <span id="companyIndu" style="font-size: 18px;margin-top:20px;display: block;">设计/艺术</span><br>
+                             <span id="companyScale" style="font-size: 18px;margin-top:20px;display: block;">20人以下</span><br>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
+                    </div>
+                </div>
+            </div>
+    </div>
+    <!-- 全局js -->
+    <script src="{% static 'js/jquery.min.js' %}"></script>
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+
+    <!-- 自定义js -->
+    <script src="{% static 'js/content.js' %}"></script>
+
+
+    <!-- Bootstrap table -->
+    <script src="{% static 'js/plugins/bootstrap-table/bootstrap-table.min.js' %}"></script>
+    <script src="{% static 'js/plugins/bootstrap-table/bootstrap-table-mobile.min.js' %}"></script>
+    <script src="{% static 'js/plugins/bootstrap-table/locale/bootstrap-table-zh-CN.min.js' %}"></script>
+
+    <!-- Peity -->
+    <script type="text/javascript">
+
+		$(function(){
+			$('#exampleTableEvents').bootstrapTable({
+			      /* url: "queryDev.json", */
+			      url: "/job/getJobsInfo",
+			      method:"get",
+			      search: false,
+			      cache: false,
+			      clickToSelect:true,
+			      pagination: true,
+			      showRefresh: true,
+			      showToggle: true,
+			      showColumns: true,
+			      pageNumber: 1,
+			      pageSize: 10,
+		          pageList: [10, 25, 50, 100],
+			      sidePagination: 'server',
+			      iconSize: 'outline',
+			      idField: "devId",
+			      toolbar: '#exampleTableEventsToolbar',
+			      columns: [{
+	                    field: 'state',
+	                    radio: true,
+	                },{
+	                    field: 'job',
+	                    title: '招聘名称',
+//	                    visible: false,
+	                    align:"center",
+	                    halign:"center",
+                        formatter:yongHuBangDing
+	                }, {
+	                    field: 'post_type',
+	                    title: '岗位类型',
+	                    align:"center",
+	                    halign:"center"
+	                }, {
+	                    field: 'city',
+	                    title: '工作城市',
+	                    align:"center",
+	                    halign:"center"
+	                }, {
+	                    field: 'job_place',
+	                    title: '工作地点',
+	                    align:"center",
+	                    halign:"center"
+	                }, {
+	                    field: 'job_experience',
+	                    title: '工作经验要求',
+	                    align:"center",
+	                    halign:"center"
+	                }, {
+	                    field: 'education',
+	                    title: '学历要求',
+	                    align:"center",
+	                    halign:"center"
+	                },{
+	                    field: 'min_wage',
+	                    title: '最低薪资',
+	                    align:"center",
+	                    halign:"center",
+                        formatter:function(value,row,index){
+	                        return value+"k";
+                        }
+	                },{
+	                    field: 'max_wage',
+	                    title: '最高薪资',
+	                    align:"center",
+	                    halign:"center",
+                        formatter:function(value,row,index){
+	                        return value+"k";
+                        }
+	                },{
+	                    field: 'job_duty',
+	                    title: '工作职责',
+	                    align:"center",
+	                    halign:"center"
+	                },{
+	                    field: 'job_benefits',
+	                    title: '工作福利',
+	                    align:"center",
+	                    halign:"center"
+	                },{
+	                    field: 'update_time',
+	                    title: '更新时间',
+	                    align:"center",
+	                    halign:"center"
+	                }],
+		          queryParams : function (params) {
+		            //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
+		            var temp = {
+		                rows: params.limit,                         //页面大小
+		                page: (params.offset / params.limit) + 1,   //页码
+
+                        city:$("#city").val(),
+                        job_experience:$("#job_experience").val(),
+                        education:$("#education").val(),
+                        post_type:$("#postType").val()
+		            };
+		            return temp;
+		        },
+			      icons: {
+			        refresh: 'glyphicon-repeat',
+			        toggle: 'glyphicon-list-alt',
+			        columns: 'glyphicon-list'
+			      }
+			    });
+		});
+        function yongHuBangDing(value,row,index){
+				return "<a href='javascript:;' class='btn btn-xs green' onclick=\"checkCompany('" + row.number_id + "')\">"+value+"</a>";
+		}
+       function btn_query_click(){
+           $('#exampleTableEvents').bootstrapTable('selectPage', 1);
+           $('#exampleTableEvents').bootstrapTable('refresh');
+
+//           console.log($("#city").val());
+//           console.log($("#job_experience").val());
+//           console.log($("#education").val());
+//           console.log($("#postType").val());
+       }
+
+       function checkCompany(numberId){
+                $.ajax({
+                    async : true,    //表示请求是否异步处理
+                    type : "get",    //请求类型
+                    url : "/job/companyInfo",//请求的 URL地址
+                    dataType : "json",//返回的数据类型
+                    data:{"numberId":numberId},
+                    success: function (datas){
+                        console.log(datas);
+                        document.getElementById("companyImg").src = datas[0].logo;
+                        document.getElementById("companyName").href = datas[0].website;
+                        document.getElementById("companyName").innerHTML  = datas[0].company;
+                        document.getElementById("companyIndu").innerHTML  = datas[0].industry;
+                        document.getElementById("companyScale").innerHTML  = datas[0].scale;
+
+                        $("#myModal2").modal({
+                            backdrop: "static", // 相当于data-backdrop
+                            keyboard: false, // 相当于data-keyboard
+                            show: true  // 相当于data-show
+                        });
+                    },
+                    error:function (data) {
+
+                    }
+                });
+       }
+
+    </script>
+</body>
+</html>

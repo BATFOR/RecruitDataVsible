@@ -1,0 +1,186 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+    <title> - 论坛</title>
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+
+    <link rel="shortcut icon" href="{% static 'favicon.ico' %}"> <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+    <link href="{% static 'css/font-awesome.css' %}" rel="stylesheet">
+    <link href="{% static 'css/animate.css' %}" rel="stylesheet">
+    <link href="{% static 'css/style.css' %}" rel="stylesheet">
+
+
+</head>
+
+<body class="gray-bg">
+    <div class="row">
+        <div class="wrapper wrapper-content animated fadeInRight">
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="wrapper wrapper-content animated fadeInRight">
+
+                        <div class="ibox-content m-b-sm border-bottom">
+                            <div class="input-group input-group-sm" style="position: relative;">
+                                <span class="input-group-addon">要爬取的职位类型</span>
+                                <select type="text" class="form-control" id="kw">
+                                   <option value="Java开发">Java开发</option>
+                                   <option value="UI设计师">UI设计师</option>
+                                   <option value="Web前端">Web前端</option>
+                                   <option value="PHP">PHP</option>
+                                   <option value="Python">Python</option>
+                                   <option value="Android">Android</option>
+                                   <option value="美工">美工</option>
+                                   <option value="深度学习">深度学习</option>
+                                   <option value="算法工程师">算法工程师</option>
+                                   <option value="Hadoop">Hadoop</option>
+                                   <option value="Node.js">Node.js</option>
+                                   <option value="数据开发">数据开发</option>
+                                   <option value="数据分析师">数据分析师</option>
+                                   <option value="数据架构">数据架构</option>
+
+                                   <option value="人工智能">人工智能</option>
+                                   <option value="区块链">区块链</option>
+                                   <option value="电气工程师">电气工程师</option>
+                                   <option value="电子工程师">电子工程师</option>
+                                   <option value="PLC">PLC</option>
+                                   <option value="测试工程师">测试工程师</option>
+                                   <option value="设备工程师">设备工程师</option>
+                                   <option value="硬件工程师">硬件工程师</option>
+                                   <option value="结构工程师">结构工程师</option>
+                                   <option value="工艺工程师">工艺工程师</option>
+                                   <option value="产品经理">产品经理</option>
+                                   <option value="新媒体运营">新媒体运营</option>
+                                   <option value="运营专员">运营专员</option>
+                                   <option value="淘宝运营">淘宝运营</option>
+
+                                   <option value="天猫运营">天猫运营</option>
+                                   <option value="产品助理">产品助理</option>
+                                   <option value="产品运营">产品运营</option>
+                                   <option value="淘宝客服">淘宝客服</option>
+                                   <option value="游戏运营">游戏运营</option>
+                                   <option value="编辑">编辑</option>
+                                   <option value="全部">全部</option>
+                                </select>
+                                <button type="button" class="form-control" id="startSpide">开始</button>
+                                <button type="button" class="form-control" id="downLoad" style="width:100px;height:50px;position: absolute;top:91px;right:27px;display: none;">下载</button>
+                            </div>
+
+                        </div>
+
+                        <!--<div class="ibox-content forum-container" style="height:100%;overflow: scroll;">-->
+                        <iframe id="mainIframe" name="mainIframe" class="ibox-content forum-container" src="" frameborder="0" style="overflow: scroll;width: 100%;height: 500px;">
+                            <!--<pre style="height:500px;">-->
+
+                            <!--</pre>-->
+                        </iframe>
+                        <!--</div>-->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal inmodal" id="myModal2" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content animated flipInY">
+                    <div class="modal-header">
+                        <h4 class="modal-title">正在爬取...</h4>
+                    </div>
+                    <div class="modal-body" style="position: relative;height:300px;">
+                         <img  width="200" height="125"  src="{% static 'img/loading.gif' %}" style="position:absolute;left:0;right: 0;top: 0;bottom: 0;margin: auto;"></img>
+                    </div>
+                    <div class="modal-footer">
+
+                    </div>
+                </div>
+            </div>
+    </div>
+    <!-- 全局js -->
+    <script src="{% static 'js/jquery.min.js' %}"></script>
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+    <!-- Peity -->
+    <script src="{% static 'js/plugins/peity/jquery.peity.min.js' %}"></script>
+    <!-- 自定义js -->
+    <script src="{% static 'js/content.js' %}"></script>
+    <script>
+
+            $("#startSpide").click(function(event){
+                $("#myModal2").modal({
+                    backdrop: "static", // 相当于data-backdrop
+                    keyboard: false, // 相当于data-keyboard
+                    show: true  // 相当于data-show
+                });
+                $.ajax({
+                    async : true,    //表示请求是否异步处理
+                    type : "get",    //请求类型
+                    url : "/job/onlineSpider",//请求的 URL地址
+                    dataType : "json",//返回的数据类型
+                    data:{"kw":$("#kw").val()},
+                    success: function (datas){
+                        if(datas.msg=="success"){
+                            document.getElementById("mainIframe").src = "/static"+datas.data;
+                            $('#myModal2').modal('hide');
+                            $("#downLoad").show();
+                        }
+                    },
+                    error:function (data) {
+
+                    }
+                });
+            });
+
+            $("#downLoad").click(function(){
+               window.downloadFile(document.getElementById("mainIframe").src);
+            });
+
+
+         window.downloadFile = function (sUrl) {
+
+    //iOS devices do not support downloading. We have to inform user about this.
+    if (/(iP)/g.test(navigator.userAgent)) {
+        alert('Your device does not support files downloading. Please try again in desktop browser.');
+        return false;
+    }
+
+    //If in Chrome or Safari - download via virtual link click
+    if (window.downloadFile.isChrome || window.downloadFile.isSafari) {
+        //Creating new link node.
+        var link = document.createElement('a');
+        link.href = sUrl;
+
+        if (link.download !== undefined) {
+            //Set HTML5 download attribute. This will prevent file from opening if supported.
+            var fileName = sUrl.substring(sUrl.lastIndexOf('/') + 1, sUrl.length);
+            link.download = fileName;
+        }
+
+        //Dispatching click event.
+        if (document.createEvent) {
+            var e = document.createEvent('MouseEvents');
+            e.initEvent('click', true, true);
+            link.dispatchEvent(e);
+            return true;
+        }
+    }
+
+    // Force file download (whether supported by server).
+    if (sUrl.indexOf('?') === -1) {
+        sUrl += '?download';
+    }
+
+    window.open(sUrl, '_self');
+    return true;
+}
+
+window.downloadFile.isChrome = navigator.userAgent.toLowerCase().indexOf('chrome') > -1;
+window.downloadFile.isSafari = navigator.userAgent.toLowerCase().indexOf('safari') > -1;
+    </script>
+</body>
+</html>

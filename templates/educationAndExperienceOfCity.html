@@ -1,0 +1,188 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html style="height: 100%">
+   <head>
+       <meta charset="utf-8">
+       <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+   </head>
+       <body style="height: 100%; margin: 0;position:relative;">
+
+               <div id="container2" style="height: 100%" class="col-sm-6"></div>
+
+               <div id="container" style="height: 100%" class="col-sm-6"></div>
+               <div class="form-group" style="position: absolute;top: 0px;left: 50%;">
+                   <select id="post_type" class="form-control">
+                       <option value="Java开发">Java开发</option>
+                       <option value="UI设计师">UI设计师</option>
+                       <option value="Web前端">Web前端</option>
+                       <option value="PHP">PHP</option>
+                       <option value="Python">Python</option>
+                       <option value="Android">Android</option>
+                       <option value="美工">美工</option>
+                       <option value="深度学习">深度学习</option>
+                       <option value="算法工程师">算法工程师</option>
+                       <option value="Hadoop">Hadoop</option>
+                       <option value="Node.js">Node.js</option>
+                       <option value="数据开发">数据开发</option>
+                       <option value="数据分析师">数据分析师</option>
+                       <option value="数据架构">数据架构</option>
+
+                       <option value="人工智能">人工智能</option>
+                       <option value="区块链">区块链</option>
+                       <option value="电气工程师">电气工程师</option>
+                       <option value="电子工程师">电子工程师</option>
+                       <option value="PLC">PLC</option>
+                       <option value="测试工程师">测试工程师</option>
+                       <option value="设备工程师">设备工程师</option>
+                       <option value="硬件工程师">硬件工程师</option>
+                       <option value="结构工程师">结构工程师</option>
+                       <option value="工艺工程师">工艺工程师</option>
+                       <option value="产品经理">产品经理</option>
+                       <option value="新媒体运营">新媒体运营</option>
+                       <option value="运营专员">运营专员</option>
+                       <option value="淘宝运营">淘宝运营</option>
+
+                       <option value="天猫运营">天猫运营</option>
+                       <option value="产品助理">产品助理</option>
+                       <option value="产品运营">产品运营</option>
+                       <option value="淘宝客服">淘宝客服</option>
+                       <option value="游戏运营">游戏运营</option>
+                       <option value="编辑">编辑</option>
+                   </select>
+               </div>
+
+
+       <script src="{% static 'js/jquery.min.js' %}"></script>
+       <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/echarts.min.js"></script>
+       <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts-gl/echarts-gl.min.js"></script>
+       <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts-stat/ecStat.min.js"></script>
+       <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/extension/dataTool.min.js"></script>
+       <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/map/js/china.js"></script>
+       <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/map/js/world.js"></script>
+       <script type="text/javascript" src="https://api.map.baidu.com/api?v=2.0&ak=kTWetyXuPLx38KRbCHxswZRkFKPLtw0H&__ec_v__=20190126"></script>
+       <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/extension/bmap.min.js"></script>
+       <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/simplex.js"></script>
+       <script type="text/javascript">
+var dom = document.getElementById("container");
+var dom2 = document.getElementById("container2");
+var myChart = echarts.init(dom);
+var myChart2 = echarts.init(dom2);
+
+window.onresize = function(){
+    myChart.resize();
+    myChart2.resize();
+}
+
+option = {
+    title : {
+        text: '学历要求占比',
+        x:'center'
+    },
+    tooltip : {
+        trigger: 'item',
+        formatter: "{a} <br/>{b} : {c} ({d}%)"
+    },
+    legend: {
+        type: 'scroll',
+        orient: 'vertical',
+        right: 10,
+        top: 20,
+        bottom: 20,
+        data: []
+//
+//        selected: data.selected
+    },
+    series : [
+        {
+            name: '学历要求',
+            type: 'pie',
+            radius : '55%',
+            center: ['40%', '50%'],
+            data: [],
+            itemStyle: {
+                emphasis: {
+                    shadowBlur: 10,
+                    shadowOffsetX: 0,
+                    shadowColor: 'rgba(0, 0, 0, 0.5)'
+                }
+            }
+        }
+    ]
+};
+
+option2 = {
+    title : {
+        text: '工作经验要求占比',
+        x:'center'
+    },
+    tooltip : {
+        trigger: 'item',
+        formatter: "{a} <br/>{b} : {c} ({d}%)"
+    },
+    legend: {
+        type: 'scroll',
+        orient: 'vertical',
+        right: 10,
+        top: 20,
+        bottom: 20,
+        data: []
+//
+//        selected: data.selected
+    },
+    series : [
+        {
+            name: '工作经验',
+            type: 'pie',
+            radius : '55%',
+            center: ['40%', '50%'],
+            data: [],
+            itemStyle: {
+                emphasis: {
+                    shadowBlur: 10,
+                    shadowOffsetX: 0,
+                    shadowColor: 'rgba(0, 0, 0, 0.5)'
+                }
+            }
+        }
+    ]
+};
+genData();
+function genData(){
+    myChart.showLoading();
+    myChart2.showLoading();
+  $.ajax({
+            async : false,    //表示请求是否异步处理
+            type : "get",    //请求类型
+            url : "/job/getEducationAndExperienceOfCity",//请求的 URL地址
+            dataType : "json",//返回的数据类型
+            data:{"post_type":$("#post_type").val()},
+            success: function (datas) {
+                myChart.hideLoading();
+                myChart2.hideLoading();
+
+                option.legend.data = datas.legendData;
+                option.series[0].data = datas.seriesData;
+
+                option2.legend.data = datas.legendData2;
+                option2.series[0].data = datas.seriesData2;
+
+                if (option && typeof option === "object") {
+                    myChart.setOption(option, true);
+                }
+
+                if (option2 && typeof option2 === "object") {
+                    myChart2.setOption(option2, true);
+                }
+            },
+            error:function (data) {
+
+            }
+    });
+}
+$("#post_type").change(function(){
+   genData();
+});
+
+       </script>
+   </body>
+</html>
