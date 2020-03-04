@@ -82,7 +82,7 @@ DATABASES = {
         'NAME': 'zhaopin_test',  #zhaopin_test   #recruit_info
         'USER':'root' ,        #os.environ.get('DJANGO_MYSQL_USER')
         'PASSWORD': 'root',     #os.environ.get('DJANGO_MYSQL_PASSWORD')
-        'HOST': 'xxx.xxx.xxx.xxx',   #os.environ.get('DJANGO_MYSQL_HOST')
+        'HOST': 'localhost',   #os.environ.get('DJANGO_MYSQL_HOST')
         'PORT': 3306,
         'OPTIONS': {'charset': 'utf8mb4'},
     }

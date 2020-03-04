@@ -9,7 +9,7 @@ import requests
 import json
 import random
 import datetime
-import mysql.connector
+# import mysql.connector
 import threading
 import urllib.request as urllib
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
@@ -368,7 +368,7 @@ def data_analysis(info,name,post_type):#分析获取数据,数据处理
 #            mutex_lock.release()
 
 def climb(url,pag,headers,post_type):#爬取页面信息
-    r=requests.get(url,headers=headers,verify=False)
+    r=requests.post(url,headers=headers,verify=False)
     if r.status_code==200:
         name = threading.current_thread().name
         mutex_lock.acquire()
@@ -417,5 +417,5 @@ def main(json_type,file):#json_type为爬取页面传入的爬取数据类型，
 
 
 if __name__=="__main__":
-    main("Java开发")
+    main("Java开发","test.txt")
     print("123")
