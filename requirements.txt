@@ -18,7 +18,7 @@ cryptography==2.7
 Cython==0.29.7
 decorator==4.4.0
 defusedxml==0.6.0
-Django==2.1.4
+Django==2.2.13
 django-appconf==1.0.3
 django-autoslug==1.9.4
 django-compressor==2.3
