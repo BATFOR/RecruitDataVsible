@@ -32,7 +32,7 @@ def index(request):
 
 #request网页请求
 
-def pageConvert(request,pageName="index_i.html"):
+def pageConvert(request,pageName="index.html"):
     return render(request, pageName,locals())
 
 def getJobInfos(request):
