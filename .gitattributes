@@ -1,4 +1,4 @@
 *.js linguist-language=Python
 *.css linguist-language=Pyhton
 *.html linguist-language=Python
-.idea
+
