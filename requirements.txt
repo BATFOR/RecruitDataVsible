@@ -27,7 +27,7 @@ django-haystack==2.8.1
 django-ipware==2.1.0
 django-mdeditor==0.1.14
 django-uuslug==1.1.8
-djangorestframework==3.9.4
+djangorestframework==3.11.2
 dwebsocket==0.5.10
 easydict==1.9
 elasticsearch==7.0.2
