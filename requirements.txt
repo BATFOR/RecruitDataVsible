@@ -92,7 +92,7 @@ python-memcached==1.59
 python-slugify==3.0.2
 pytz==2019.1
 pywinpty==0.5.5
-PyYAML==5.1
+PyYAML==5.4
 pyzmq==18.0.1
 qtconsole==4.4.4
 raven==6.10.0
