@@ -22,7 +22,7 @@ Django==2.1.4
 django-appconf==1.0.3
 django-autoslug==1.9.4
 django-compressor==2.3
-django-debug-toolbar==1.11
+django-debug-toolbar==1.11.1
 django-haystack==2.8.1
 django-ipware==2.1.0
 django-mdeditor==0.1.14
