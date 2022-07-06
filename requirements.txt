@@ -36,7 +36,7 @@ entrypoints==0.3
 gast==0.2.2
 grpcio==1.21.1
 h5py==2.7.0
-html5lib==0.9999999
+html5lib==0.999999999
 idna==2.8
 ipaddress==1.0.22
 ipykernel==5.1.1
